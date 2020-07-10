@@ -1,0 +1,14 @@
+<div *ngIf="data.isDelete">
+    <mat-dialog-content>Do you want to delete ?</mat-dialog-content>
+    <mat-dialog-actions>
+        <button mat-button mat-dialog-close mat-dialog-close=true>Yes</button>
+        <button mat-button mat-dialog-close mat-dialog-close=false>No</button>
+    </mat-dialog-actions>
+</div>
+<div *ngIf="!data.isDelete">
+    <mat-dialog-content>Successfully updated.</mat-dialog-content>
+    <mat-dialog-actions>
+        <button type="button" mat-raised-button mat-dialog-close color="primary" style="
+        margin: auto;">Okay</button>
+    </mat-dialog-actions>
+</div>

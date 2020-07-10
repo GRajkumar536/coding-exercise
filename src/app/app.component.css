@@ -1,0 +1,16 @@
+.main-div{
+    height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  img {
+    border-radius: 50%;
+    width: auto;
+  }
+  
