@@ -1,6 +1,6 @@
 <mat-toolbar color="primary">
   <div style="margin-left: auto;">
-    <button mat-raised-button (click)="isGrid=true">Add Item</button>
+    <button mat-raised-button (click)="isGrid=true;isAddItem()">Add Item</button>
     <button mat-raised-button style="margin-left: 10px;" (click)="isGrid=false">Grid</button>
   </div>
 </mat-toolbar>
@@ -12,15 +12,16 @@
           <td>
             <mat-form-field class="example-full-width">
               <mat-label>Item Name</mat-label>
-              <input matInput name="txtName" [(ngModel)]="model.itemName" placeholder="Ex. abc">
+              <input matInput #name name="txtName" maxlength="30" [(ngModel)]="model.itemName" placeholder="Ex. abc">
+              <mat-hint align="end">{{name.value.length}} / 30</mat-hint>
             </mat-form-field>
           </td>
           <td>
             <mat-form-field appearance="fill">
               <mat-label>Choose a date</mat-label>
-              <input matInput name="txtDate" [(ngModel)]="model.itemAdditionDate" [matDatepicker]="picker">
+              <input matInput name="txtDate" [(ngModel)]="model.itemAdditionDate" [matDatepicker]="picker" disabled>
               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-              <mat-datepicker #picker></mat-datepicker>
+              <mat-datepicker #picker disabled="false"></mat-datepicker>
             </mat-form-field>
           </td>
         </tr>
@@ -28,7 +29,9 @@
           <td>
             <mat-form-field class="example-full-width">
               <mat-label>Item Price</mat-label>
-              <input type="number" matInput name="txtPrice" [(ngModel)]="model.itemPrice" placeholder="Ex. 100">
+              <input matInput #price name="txtPrice" maxlength="10" [(ngModel)]="model.itemPrice"
+                (keypress)="isNumber($event)" placeholder="Ex. 100">
+              <mat-hint align="end">{{price.value.length}} / 10</mat-hint>
             </mat-form-field>
           </td>
           <td rowspan="2" style="text-align-last: center;">
@@ -47,8 +50,9 @@
           <td>
             <mat-form-field class="example-full-width">
               <mat-label>Item Description</mat-label>
-              <textarea matInput name="txtDec" [(ngModel)]="model.itemDescription"
+              <textarea #description maxlength="100" matInput name="txtDec" [(ngModel)]="model.itemDescription"
                 placeholder="Ex. Coding Exercise"></textarea>
+              <mat-hint align="end">{{description.value.length}} / 100</mat-hint>
             </mat-form-field>
           </td>
         </tr>
@@ -61,17 +65,15 @@
     </mat-card-content>
   </mat-card>
 </div>
-
 <!-- Mat Table -->
 <div [hidden]="isGrid" class="mat-elevation-z8">
   <mat-form-field class="example-full-width">
-    <input (keyup)="filter($event.target.value)" matInput placeholder="Search">
+    <input (keyup)="filter(searchText)" [(ngModel)]="searchText" matInput placeholder="Search">
   </mat-form-field>
   <button mat-raised-button color="warn" (click)="removeSelectedRows()">
     Remove Selected Items
   </button>
-  <mat-table [dataSource]="this.dataSource" class="mat-elevation-z8">
-
+  <mat-table [dataSource]="this.dataSource" class="mat-elevation-z8" matSort>
     <!-- CheckBox Column -->
     <ng-container matColumnDef="checkBos">
       <mat-header-cell *matHeaderCellDef>
@@ -85,37 +87,31 @@
         </mat-checkbox>
       </mat-cell>
     </ng-container>
-
     <!-- Item Name Column -->
     <ng-container matColumnDef="itemName">
-      <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
       <mat-cell *matCellDef="let element"> {{element.itemName}} </mat-cell>
     </ng-container>
-
     <!-- Item Price Column -->
     <ng-container matColumnDef="itemPrice">
-      <mat-header-cell *matHeaderCellDef> Price </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Price </mat-header-cell>
       <mat-cell *matCellDef="let element"> {{element.itemPrice}} </mat-cell>
     </ng-container>
-
     <!-- Item Description Column -->
     <ng-container matColumnDef="itemDescription">
       <mat-header-cell *matHeaderCellDef> Description </mat-header-cell>
       <mat-cell *matCellDef="let element"> {{element.itemDescription}} </mat-cell>
     </ng-container>
-
     <!-- Item Addition Date Column -->
     <ng-container matColumnDef="itemAdditionDate">
-      <mat-header-cell *matHeaderCellDef> Addition Date </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Addition Date </mat-header-cell>
       <mat-cell *matCellDef="let element"> {{element.itemAdditionDate| date:'shortDate'}} </mat-cell>
     </ng-container>
-
     <!-- Item Image Column -->
     <ng-container matColumnDef="itemImage">
       <mat-header-cell *matHeaderCellDef> Image </mat-header-cell>
       <mat-cell *matCellDef="let element"> <img [src]="element.itemImage" style="width: 55px" /> </mat-cell>
     </ng-container>
-
     <!-- Actions Column -->
     <ng-container matColumnDef="actions">
       <mat-header-cell *matHeaderCellDef>Actions </mat-header-cell>
